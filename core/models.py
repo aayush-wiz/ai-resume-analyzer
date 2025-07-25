@@ -3,6 +3,10 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
+"""Core data models for the resume analysis workflow.
+These models define the structure of the data used by various agents in the system.
+"""
+
 
 class Contact(BaseModel):
     full_name: str
@@ -85,17 +89,31 @@ class Experience(BaseModel):
 # --- Model for Agent 2 Output ---
 class MarketResearch(BaseModel):
     """Structured summary of job market trends from web research."""
-    trending_roles: List[str] = Field(description="List of job titles currently in demand.")
-    required_skills: List[str] = Field(description="List of key skills and technologies sought by employers.")
-    market_summary: str = Field(description="A brief summary of the job market for this profile.")
+
+    trending_roles: List[str] = Field(
+        description="List of job titles currently in demand."
+    )
+    required_skills: List[str] = Field(
+        description="List of key skills and technologies sought by employers."
+    )
+    market_summary: str = Field(
+        description="A brief summary of the job market for this profile."
+    )
 
 
 # --- Model for Agent 3 Output ---
 class GapAnalysis(BaseModel):
     """Comparison of the résumé against market research."""
-    candidate_strengths: List[str] = Field(description="Skills and experiences the candidate has that are in demand.")
-    candidate_gaps: List[str] = Field(description="Important skills the candidate is missing based on market trends.")
-    improvement_suggestions: str = Field(description="Actionable advice for the candidate to bridge the gaps.")
+
+    candidate_strengths: List[str] = Field(
+        description="Skills and experiences the candidate has that are in demand."
+    )
+    candidate_gaps: List[str] = Field(
+        description="Important skills the candidate is missing based on market trends."
+    )
+    improvement_suggestions: str = Field(
+        description="Actionable advice for the candidate to bridge the gaps."
+    )
 
 
 # --- The Central State Object ---
@@ -104,16 +122,19 @@ class AnalysisState(BaseModel):
     The central state object that is passed between agents in the workflow.
     Each agent enriches this state with its findings.
     """
-    raw_resume_text: str = Field(description="The original text extracted from the resume file.")
+
+    raw_resume_text: str = Field(
+        description="The original text extracted from the resume file."
+    )
     structured_resume: Optional[StructuredResume] = Field(
         default=None,
-        description="The resume parsed into a structured Pydantic model by the Parser Agent."
+        description="The resume parsed into a structured Pydantic model by the Parser Agent.",
     )
     market_research: Optional[str] = Field(
         default=None,
-        description="A summary of market trends and required skills from the Researcher Agent."
+        description="A summary of market trends and required skills from the Researcher Agent.",
     )
     gap_analysis: Optional[str] = Field(
         default=None,
-        description="A structured analysis of the candidate's skills vs. market demands from the Analyst Agent."
+        description="A structured analysis of the candidate's skills vs. market demands from the Analyst Agent.",
     )
